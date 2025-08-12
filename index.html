@@ -1,48 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kolumbien Bundesbank</title>
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
+  <meta charset="UTF-8">
+  <title>Kolumbien Bundesbank – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { background: white; font-family: 'Neue Haas Grotesk Display', sans-serif; color: black; text-align: center; }
+    .container { width: 300px; margin: 50px auto; }
+    input { width: 100%; padding: 10px; margin: 5px 0; }
+    button { width: 100%; padding: 10px; background: black; color: white; border: none; cursor: pointer; }
+    button:hover { background: red; }
+  </style>
 </head>
 <body>
+  <h1>KBB Online Banking</h1>
+  <div class="container">
+    <h3>Login / Register</h3>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+    <p id="msg"></p>
+  </div>
 
-<header>
-    <img src="german_bank_logo.png" alt="Kolumbien Bundesbank Logo" class="logo">
-    <h1>Kolumbien Bundesbank</h1>
-    <p class="slogan">For the People. Workers of the World, Unite!</p>
-</header>
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
-<nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="currency.html">Currency</a>
-    <a href="policy.html">Monetary Policy</a>
-    <a href="contact.html">Contact</a>
-</nav>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDgV7docvMEjXmTBMkmSPo70HGgI5DGbjU",
+      authDomain: "kolumbien-bundesbank.firebaseapp.com",
+      projectId: "kolumbien-bundesbank",
+      storageBucket: "kolumbien-bundesbank.firebasestorage.app",
+      messagingSenderId: "254774891654",
+      appId: "1:254774891654:web:843dda85c08c611723ad07",
+      measurementId: "G-BT6HT9PKCX"
+    };
 
-<main>
-    <section class="hero">
-        <img src="dc_buildings.jpg" alt="Government Buildings">
-    </section>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    <section class="exchange">
-        <h2>Exchange Rates</h2>
-        <ul>
-            <li>11 Marks = 1 Yerokan Shekel</li>
-            <li>12 Marks = 1 Sordish Ren</li>
-            <li>Dirham = Updated weekly</li>
-        </ul>
-        <p>All rates are managed and updated automatically.</p>
-    </section>
-</main>
+    async function login() {
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "dashboard.html";
+      } catch (e) {
+        document.getElementById("msg").innerText = e.message;
+      }
+    }
 
-<footer>
-    <p>Kolumbien Bundesbank — Official Central Bank of Kolumbia</p>
-    <p>All data updated weekly. Exchange rates subject to change.</p>
-</footer>
+    async function register() {
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+      try {
+        const userCred = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(db, "users", userCred.user.uid), {
+          balance: 0,
+          currency: "Kolumbien Mark",
+          role: "user"
+        });
+        window.location.href = "dashboard.html";
+      } catch (e) {
+        document.getElementById("msg").innerText = e.message;
+      }
+    }
 
+    window.login = login;
+    window.register = register;
+  </script>
 </body>
 </html>
+
