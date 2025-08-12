@@ -1,0 +1,43 @@
+body {
+    font-family: 'Neue Haas Grotesk Display', sans-serif;
+    margin: 0;
+    background-color: white;
+    color: black;
+}
+
+header {
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 10px;
+}
+
+.logo {
+    height: 80px;
+}
+
+nav {
+    text-align: center;
+    background-color: lightgray;
+    padding: 10px;
+}
+
+nav a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: black;
+}
+
+.hero img {
+    width: 100%;
+    height: auto;
+}
+
+.security {
+    color: red;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #f4f4f4;
+}
